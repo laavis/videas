@@ -18,10 +18,14 @@ const users = require('./routes/users');
 // passport config
 require('./config/passport')(passport);
 
+// DB Config
+const db = require('./config/database');
+
 // map global promise- get rid of warning
 mongoose.Promise = global.Promise;
+
 // connect to mongoose
-mongoose.connect('mongodb://localhost/videas-dev')
+mongoose.connect(db.mongoURI)
 .then(() => console.log('MongoDB Connected...'))
 .catch(err => console.log(err));
 
@@ -80,8 +84,8 @@ app.get('/about', (req, res) => {
 app.use('/ideas', ideas);
 app.use('/users', users);
 
-// set port
-const port = 5000;
+// set port (heroku process.env.port)
+const port = process.env.port || 5000;
 
 // listen on certain port
 app.listen(port, () => {
